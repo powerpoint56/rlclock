@@ -91,7 +91,7 @@ if (!Date.now) {
     if (this.hallLength) {
       this.dayString += "-" + this.hallLength;
     }
-    if (this.dayString === "No Classes" || this.dayString === "Weekend") { // no school, no need to do anything else
+    if (!this.dayString || this.dayString === " " || this.dayString === "No Classes" || this.dayString === "Weekend") { // no school, no need to do anything else
       this.noClasses = true;
       return this;
     }

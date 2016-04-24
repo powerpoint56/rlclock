@@ -1,229 +1,336 @@
+/* global localStorage */
+
+"use strict";
+
 if (!Date.now) {
   Date.now = function() {
     return new Date().getTime();
   };
 }
 
+function arrayLastElement(arr) {
+  return arr[arr.length - 1];
+}
+
 (function() {
-  "use strict";
- 
-  var minutesLeft, today;
-  var ready = 0;
-  var daytype;
-  var days = [];
-  var dom;
+  var ready = 2;
   var now = new Date();
+  var currentMinutes;
   
-  function checkReady() {
-    ready++;
-    if (ready === 2) {
-      main();
-    }
-  }
-  
-  function main() {
-    dom = {
-      periodsList: document.createElement("section"),
-      current: document.getElementById("current"),
-      currentTitle: document.getElementById("current-title"),
-      currentMessage: document.getElementById("current-message")
-    };
-    
-    daytype.isDrop = false;
-    today = new Day(daytype.dayType, daytype.hallLength || 0, daytype.isDrop);
-    days.push(today);
-  
-    dom.periodsList.id = "periods-list";
-    dom.periodsList.className = "list";
-    dom.periodsList.appendChild(today.domElement());
-    
-    if (today.noClasses) {
-      dom.currentTitle.textContent = today.dayString;
-      dom.currentMessage.textContent = "There is no school today.";
-    } else if (today.special) {
-      dom.currentTitle.textContent = "Special schedule";
-      dom.currentMessage.textContent = "Please use the schedule sheet given at school.";
-    } else {
-      onminutechange();
-    }
-    
-    document.body.insertBefore(dom.periodsList, dom.current.nextSibling); // insert
-    document.getElementById("about").style.display = "block";
-  }
-
-  function Block(letter, start, length) {
-    this.letter = letter;
-    this.start = start;
-    this.end = start + length;
-    this.length = length;
-  }
-  
-  Block.prototype.text = function() {
-    return this.name ? this.letter + ": " + this.name : this.letter;
+  var dom = {
+    id: function(name) {
+      return this.elements[name] || (this.elements[name] = document.getElementById(name));
+    },
+    elements: {}
   };
   
-  Block.prototype.domElement = function() {
-    var child;
-    this.element = document.createElement("div");
-    this.element.className = "list-item";
-    child = document.createElement("div");
-    child.className = "list-item-letter";
-    child.textContent = this.text();
-    this.element.appendChild(child);
-    child = document.createElement("div");
-    child.className = "list-item-time";
-    child.textContent = Block.minutesToString(this.start) + "-" + Block.minutesToString(this.end);
-    this.element.appendChild(child);
-    return this.element;
-  };
-
-  Block.minutesToString = function(mins) {
-    var h = (Math.floor(mins / 60) % 12 || 12).toString();
-    var m = (mins % 60).toString();
-    return h + ":" + (m.length === 1 ? "0" + m : m);
-  };
-
-  function Day(dayLetter, hallLength, isDrop) {
-    this.dayLetter = dayLetter;
-    this.hallLength = hallLength;
-    this.dayString = this.dayLetter;
-    
-    if (this.hallLength) {
-      this.dayString += "-" + this.hallLength;
-    }
-    if (!this.dayString || this.dayString === " " || this.dayString === "No Classes" || this.dayString === "Weekend") { // no school, no need to do anything else
-      this.noClasses = true;
-      return this;
-    }
-
-    this.periodDuration = 45;
-    if (this.hallLength > 30) {
-      if (this.hallLength === 45) {
-        this.periodDuration = 44;
-      } else if (this.hallLength === 60) {
-        this.periodDuration = 42;
-      } else if (this.hallLength === 70) {
-        this.periodDuration = 40;
-      } else if (this.hallLength > 70) {
-        this.periodDuration = 35;
+  var Day = {
+    loadSchedule: function(schedule) {
+      this.isSchool = schedule.periods !== undefined;
+      if (!this.isSchool) { // no school
+        return this.noSchool();
       }
-    }
-    this.isDrop = isDrop;
-    this.periodsLength = 7 - this.isDrop;
-    this.lunchPeriod = this.hallLength >= 45 ? 2 : 3;
-    this.currentBlock = 0;
-
-    this.blocks = [];
-    var lastBlock;
-    this.blocks.push(new Block("Homeroom", Day.HOMEROOM_START, 5));
-    if (this.hallLength) {
-      this.blocks.push(new Block(this.hallLength + " minute hall", Day.HOMEROOM_START + 10, this.hallLength));
-    }
-    var letterIndex = Day.BLOCK_LETTERS.indexOf(this.dayLetter), letter;
-    for (var i = 0; i < this.periodsLength; i++) {
-      letter = Day.BLOCK_LETTERS[letterIndex];
-      lastBlock = this.blocks[this.blocks.length - 1];
-      if (i === this.lunchPeriod) {
-        this.blocks.push(new Block(letter + " - First Lunch", lastBlock.end + 5, 25));
-        this.blocks.push(new Block(letter + " - Passing Period",  lastBlock.end + 30, 20)); // the passing period
-        this.blocks.push(new Block(letter + " - Second Lunch",  lastBlock.end + 50, 25));
+      this.setupDay(schedule);
+      this.prepareScheduleDOM();
+      this.checkReady();
+    },
+    
+    setupDay: function(schedule) {
+      this.periods = schedule.periods;
+      this.hallLength = schedule.hallLength;
+      if (this.periods[1].name === "Hall") { // in case hallLength isn't given, calculate from Hall period. REMOVE if API always provides hallLength on a hall day
+        this.hallLength = this.fullMinutes(this.periods[1].end) - this.fullMinutes(this.periods[1].start);
+      }
+      this.firstPeriod = 1;
+      if (this.hallLength) {
+        this.firstPeriod++;
+      }
+      this.dayLetter = this.periods[this.firstPeriod].block;
+      this.dayName = this.dayLetter;
+      if (this.hallLength) {
+        this.dayName += "-" + this.hallLength;
+      }
+      this.lunchPeriod = (this.hallLength >= 45 ? 3 : 4);
+    },
+    
+    error: function() {
+      ready++;
+      dom.id("periods-list").textContent = "Sorry, there has been an error. Please try reloading soon.";
+      dom.id("periods-list").style.display = "block";
+    },
+    
+    noSchool: function() {
+      var weekday = now.getDay();
+      var title;
+      if (weekday === 6 || weekday === 0) { // Saturday or Sunday is weekend
+        title = "Weekend";
       } else {
-        this.blocks.push(new Block(letter, lastBlock.end + 5, this.periodDuration));
+        title = "No School";
       }
-      letterIndex = (letterIndex + 1) % 8;
-    }
-  }
-  
-  Day.BEFORE_SCHOOL = -1;
-  Day.AFTER_SCHOOL = 8;
-  Day.HOMEROOM = -2;
-  Day.HOMEROOM_START = 495;
-  Day.BLOCK_LETTERS = "ABCDEFGH";
-
-  Day.prototype.domElement = function() {
-    var element = document.createElement("div"), child;
-    element.className = "list-section";
-    child = document.createElement("h3");
-    if (this.noClasses) {
-      child.textContent = this.dayString;
-      element.appendChild(child);
-      return element;
-    }
-    child.textContent = this.dayString;
-    element.appendChild(child);
-    if (this.special) {
-      return element;
-    }
-    for (var i = 0; i < this.blocks.length; i++) {
-      element.appendChild(this.blocks[i].domElement());
-    }
-    this.element = element;
-    return this.element;
-  };
-  
-  Day.prototype.update = function(n) {
-    var fullMinutes = n.getMinutes() + n.getHours() * 60;
-    if (fullMinutes < today.blocks[0].start) { // before homeroom
-      this.currentBlock = Day.BEFORE_SCHOOL;
-      if (this.oldBlock !== this.currentBlock) {
-        this.title = "Before homeroom";
-        this.message = "Good morning!";
-        this.oldBlock = this.currentBlock;
-      }
-    } else if (fullMinutes >= today.blocks[today.blocks.length - 1].end) { // after last block
-      this.currentBlock = Day.AFTER_SCHOOL;
-      if (this.oldBlock !== this.currentBlock) {
-        if (today.blocks[this.oldBlock]) {
-          today.blocks[this.oldBlock].element.style.backgroundColor = "";
+      dom.id("current-title").textContent = title;
+    },
+    
+    prepareScheduleDOM: function() {
+      var fragment = document.createDocumentFragment();
+      var lunch = 0;
+      var len = this.periods.length;
+      for (var i = 0; i < len; i++) {
+        var current = this.periods[i];
+        current.startMinutes = this.fullMinutes(current.start);
+        current.endMinutes = this.fullMinutes(current.end);
+        
+        if (current.period === this.lunchPeriod) {
+          current.lunch = lunch++;
         }
-        this.title = "After school";
-        this.message = "Good night!";
-        this.oldBlock = this.currentBlock;
+        
+        var block = document.createElement("div");
+        block.className = "list-item";
+        
+        var letter = document.createElement("span");
+        letter.className = "list-item-letter";
+        letter.textContent = this.periodName(current);
+        block.appendChild(letter);
+        
+        var time = document.createElement("span");
+        time.className = "list-item-time";
+        time.textContent = this.formatMinutesAsTime(current.startMinutes) + "-" + this.formatMinutesAsTime(current.endMinutes);
+        block.appendChild(time);
+        
+        fragment.appendChild(block);
       }
-    } else { // during school
-      while (this.currentBlock < today.blocks.length && today.blocks[this.currentBlock].end + 5 <= fullMinutes) {
-        this.currentBlock++;
+      this.periodsListBlocks = fragment;
+      dom.id("periods-list-heading").textContent = this.dayName;
+      dom.id("periods-list-blocks").appendChild(this.periodsListBlocks);
+      dom.id("periods-list").style.display = "block";
+      dom.id("about").style.display = "block";
+    },
+    
+    checkReady: function() {
+      if (--ready) return;
+      
+      this.start = 495; // 495 minutes since midnight is at 8:15, when homeroom starts
+      this.end = arrayLastElement(this.periods).endMinutes; // end of last period
+      
+      this.update(true);
+    },
+    
+    periodName: function(p) {
+      if (p.period === this.lunchPeriod) {
+        return p.block + " - " + ["First Lunch", "In Between Lunches", "Second Lunch"][p.lunch];
       }
-      if (this.currentBlock !== this.oldBlock) {
-        if (today.blocks[this.oldBlock]) {
-          today.blocks[this.oldBlock].element.style.backgroundColor = "";
+      return p.block || p.name;
+    },
+    
+    isDrop: function() {
+      return arrayLastElement(this.periods).period === 6;
+    },
+    
+    getRelativePeriod: function(n) {
+      return this.periodName(this.periods[this.currentPeriod + n]);
+    },
+    
+    updatePeriod: function() {
+      if (this.currentPeriod === undefined) {
+        for (var i = 0; i < this.periods.length; i++) {
+          var period = this.periods[i];
+          if (currentMinutes >= period.startMinutes && currentMinutes < period.endMinutes + 5) {
+            this.currentPeriod = i;
+            break;
+          }
         }
-        today.blocks[this.currentBlock].element.style.backgroundColor = "#a3ba82";
-        this.title = today.blocks[this.currentBlock].text();
-        this.oldBlock = this.currentBlock;
-      }
-      minutesLeft = today.blocks[this.currentBlock].end - fullMinutes; // minutes remaining until end of block
-      if (minutesLeft < 1) {
-        this.message = "Passing time: " + (minutesLeft + 5) + " minute" + (minutesLeft + 5 === 1 ? "" : "s") + " until " + today.blocks[this.currentBlock + 1].text() + " begins";
       } else {
-        this.message = minutesLeft + " minute" + (minutesLeft === 1 ? "" : "s") + " left in this block";
+        this.currentPeriod++;
       }
+      this.minutesLeft = (this.periods[this.currentPeriod].endMinutes - currentMinutes);
+    },
+    
+    update: function(isFirstTime) {
+      var timeTemp;
+      var title, description;
+      var done;
+      
+      now.setTime(Date.now());
+      if (isFirstTime) {
+        currentMinutes = this.fullMinutes(now.getHours(), now.getMinutes());
+      } else {
+        currentMinutes++;
+      }
+      
+      if (currentMinutes >= this.end) {
+        title = "After school";
+        if (now.getDay() !== 5) { // predict the next school day if it isn't Friday
+          description = "Tomorrow starts with " + this.tomorrowDayType() + " block.";
+        } else {
+          description = "The next school day starts with " + this.tomorrowDayType() + " block.";
+        }
+        done = true;
+      } else if (currentMinutes < this.start) {
+        title = "Before school";
+        timeTemp = this.hoursMinutes(this.start - currentMinutes);
+        description = this.formatNumberUnit(timeTemp.hours, "hour", " and ")
+          + this.formatNumberUnit(timeTemp.minutes, "minute", " until homeroom.");
+      } else {
+        if (this.minutesLeft === -4 || this.minutesLeft === undefined) {
+          this.updatePeriod(isFirstTime);
+          title = this.getRelativePeriod(0);
+        } else {
+          this.minutesLeft--;
+        }
+
+        if (this.minutesLeft <= 0) {
+          description = "Passing time: " + this.formatNumberUnit(this.minutesLeft + 5, "minute", " until ") + this.getRelativePeriod(1);
+          if (this.minutesLeft === 0) {
+           timeLeftAlarm(this.getRelativePeriod(1) + " starts in 5 minutes.");
+          }
+        } else {
+          description = this.formatNumberUnit(this.minutesLeft, "minute", " left");
+        }
+        
+        if (this.minutesLeft === 5) {
+          timeLeftAlarm("5 minutes left in " + this.getRelativePeriod(0));
+        }
+      }
+      
+      if (title) dom.id("current-title").textContent = title;
+      if (description) dom.id("current-description").textContent = description;
+      
+      if (done) return;
+      
+      setTimeout(this.update.bind(this), 60000 - now.getSeconds() * 1000);
+    },
+    
+    tomorrowDayType: function() {
+      var blocks = "HGFEDCBA";
+      var position = blocks.indexOf(this.dayLetter) + 1 + this.isDrop();
+      return blocks[position % 8];
+    },
+    
+    fullMinutes: function(arg1, arg2) { // hours:minutes into minutes since midnight
+      if (typeof arg1 === "string") {
+        var arr = arg1.split(":");
+        return 60 * arr[0] + 1 * arr[1];
+      }
+      if (typeof arg1 === "number") {
+        return 60 * arg1 + 1 * arg2;
+      }
+    },
+    
+    hoursMinutes: function(mins) {
+      return {
+        hours: Math.floor(mins / 60),
+        minutes: mins % 60
+      };
+    },
+    
+    formatMinutesAsTime: function(minutes) {
+      var time = this.hoursMinutes(minutes);
+      if (time.minutes < 10) {
+        time.minutes = "0" + time.minutes;
+      }
+      return (time.hours % 12 || 12) + ":" + time.minutes;
+    },
+    
+    formatNumberUnit: function(number, unit, after) {
+      if (number === 0) {
+        return "";
+      }
+      if (number === 1) {
+        return number + " " + unit + (after || "");
+      }
+      return number + " " + unit + "s" + (after || "");
     }
   };
-  
-  function onminutechange() {
-    now.setTime(Date.now());
-    today.update(now);
     
-    dom.currentTitle.textContent = today.title;
-    dom.currentMessage.textContent = today.message;
-    
-    setTimeout(onminutechange, 60000 - (now.getSeconds() * 1000));
-  }
-  
-  httpGet("//casper.roxburylatin.org/daytype.json", function() {
-    daytype = JSON.parse(this.responseText);
-    checkReady();
-  });
-  
-  window.addEventListener("DOMContentLoaded", function() {
-    checkReady();
-  });
-  
-  function httpGet(url, callback) {
+  function httpGet(url, callback, error) {
     var xhr = new XMLHttpRequest();
     xhr.open("GET", url);
     xhr.addEventListener("load", callback);
+    xhr.addEventListener("error", error);
     xhr.send();
+  }
+  
+  var root = "//casper.roxburylatin.org/"; // "" for local file
+  httpGet(
+    root + "todays_schedule.json",
+    function() {
+      Day.loadSchedule(JSON.parse(this.responseText));
+    },
+    Day.error
+  );
+  
+  addEventListener("DOMContentLoaded", function handler() {
+    removeEventListener("DOMContentLoaded", handler);
+    
+    Day.checkReady();
+    
+    Settings.load();
+    dom.id("settings-button").addEventListener("click", Settings.toggle.bind(Settings));
+  });
+  
+  var Settings = {
+    data: {
+      notifications: false
+    },
+    load: function() {
+      this.data = JSON.parse(localStorage.getItem("settings")) || this.data;
+    },
+    prepareDOM: function() {
+      var currentSetting;
+      this.allSettings = dom.id("settings").getElementsByTagName("input");
+      
+      for (var i = 0; i < this.allSettings.length; i++) {
+        currentSetting = this.allSettings[i];
+        currentSetting.checked = this.data[currentSetting.getAttribute("data-rep")];
+      }
+      
+      dom.id("settings-submit").addEventListener("click", this.submit.bind(this));
+      
+      this.isDOMReady = true;
+    },
+    save: function() {
+      var currentSetting;
+      for (var i = 0; i < this.allSettings.length; i++) { // get settings from checkboxes
+        currentSetting = this.allSettings[i];
+        this.data[currentSetting.getAttribute("data-rep")] = currentSetting.checked;
+      }
+      localStorage.setItem("settings", JSON.stringify(this.data));
+    },
+    submit: function() {
+      this.save();
+      this.toggle();
+    },
+    toggle: function() {
+      if (!this.isDOMReady) {
+        this.prepareDOM();
+      }
+      dom.id("settings").classList.toggle("appear");
+    }
+  };
+  
+  function timeLeftAlarm(text) {
+    if (Settings.data.notifications) {
+      notifyWith("RL Schedule", text || dom.minutesLeft.textContent);
+    }
+  }
+  
+  var lastNotification;
+  function notifyWith(title, body) {
+    if (!window.Notification) {
+      return alert("Notifications not supported."); // use better error message
+    } else if (window.Notification.permission === "granted") {
+      display();
+    } else if (window.Notification.permission !== "denied") {
+      window.Notification.requestPermission(function(permission) {
+        if (permission === "granted") {
+          display();
+        }
+      });
+    }
+    function display() {
+      if (lastNotification) {
+        setTimeout(lastNotification.close.bind(lastNotification), 5000);
+      }
+      lastNotification = new window.Notification(body, {title: title});
+    }
   }
 })();

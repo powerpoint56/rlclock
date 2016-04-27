@@ -249,9 +249,8 @@ function arrayLastElement(arr) {
     xhr.send();
   }
   
-  var root = "//casper.roxburylatin.org/"; // "" for local file
   httpGet(
-    root + "todays_schedule.json",
+    "//casper.roxburylatin.org/todays_schedule.json",
     function() {
       Day.loadSchedule(JSON.parse(this.responseText));
     },
@@ -294,6 +293,9 @@ function arrayLastElement(arr) {
         this.data[currentSetting.getAttribute("data-rep")] = currentSetting.checked;
       }
       localStorage.setItem("settings", JSON.stringify(this.data));
+      if (this.data.notifications) {
+        notificationPermission();
+      }
     },
     submit: function() {
       this.save();
@@ -309,28 +311,29 @@ function arrayLastElement(arr) {
   
   function timeLeftAlarm(text) {
     if (Settings.data.notifications) {
-      notifyWith("RL Schedule", text || dom.minutesLeft.textContent);
+      displayNotification("RL Schedule", text || dom.minutesLeft.textContent);
     }
   }
   
   var lastNotification;
-  function notifyWith(title, body) {
-    if (!window.Notification) {
-      return alert("Notifications not supported."); // use better error message
-    } else if (window.Notification.permission === "granted") {
-      display();
-    } else if (window.Notification.permission !== "denied") {
-      window.Notification.requestPermission(function(permission) {
-        if (permission === "granted") {
-          display();
-        }
-      });
+  function displayNotification(title, body) {
+    if (window.Notification.permission !== "granted") {
+      return;
     }
-    function display() {
-      if (lastNotification) {
-        setTimeout(lastNotification.close.bind(lastNotification), 5000);
-      }
-      lastNotification = new window.Notification(body, {title: title});
+    if (lastNotification) {
+      setTimeout(lastNotification.close.bind(lastNotification), 5000);
     }
+    lastNotification = new window.Notification(body, {title: title});
   }
+  
+  function notificationPermission() {
+    if (!window.Notification) {
+      return alert("Notifications not supported.");
+    }
+    if (window.Notification.permission === "granted") {
+      return;
+    }
+    window.Notification.requestPermission();
+  }
+  displayNotification("Check out our new Hotline Board!","Check out our new Hotline board feature at rlclock.tk/hotline !");
 })();

@@ -3,7 +3,7 @@
     element: document.getElementById("hotline"),
     update: function() {
       var xhr = new XMLHttpRequest();
-      xhr.open("GET", "http://104.131.78.235:25555/today"); //http://104.131.78.235:25555/today
+      xhr.open("GET", "http://198.199.74.94/today"); //http://104.131.78.235:25555/today
       xhr.addEventListener("load", function() {
         Hotline.loadJSON(this.responseText);
         Hotline.updateDOM();

@@ -5,15 +5,18 @@ body {
     background-color: #eee;
 }
 
+h2 {
+    font-weight: 500;
+}
+
 .announcement {
-    border: 1px solid black;
     margin-bottom: 1em;
     padding: 1em;
     background-color: white;
 }
 
 .title {
-    font-weight: bold;
+    font-weight: 500;
     font-size: 1em;
     margin: 0;
 }

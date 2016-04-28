@@ -167,8 +167,8 @@ function arrayLastElement(arr) {
       } else if (currentMinutes < this.start) {
         title = "Before school";
         timeTemp = this.hoursMinutes(this.start - currentMinutes);
-        description = this.formatNumberUnit(timeTemp.hours, "hour", " and ")
-          + this.formatNumberUnit(timeTemp.minutes, "minute", " until homeroom.");
+        description = this.formatNumberUnit(timeTemp.hours, "hour", " ", "")
+          + this.formatNumberUnit(timeTemp.minutes, "minute", " ") + "until homeroom.";
       } else {
         if (this.minutesLeft === -4 || this.minutesLeft === undefined) {
           this.updatePeriod(isFirstTime);
@@ -178,16 +178,16 @@ function arrayLastElement(arr) {
         }
 
         if (this.minutesLeft <= 0) {
-          description = "Passing time: " + this.formatNumberUnit(this.minutesLeft + 5, "minute", " until ") + this.getRelativePeriod(1);
+          description = "Passing time: " + this.formatNumberUnit(this.minutesLeft + 5, "minute") + " until " + this.getRelativePeriod(1);
           if (this.minutesLeft === 0) {
-           timeLeftAlarm(this.getRelativePeriod(1) + " starts in 5 minutes.");
+           displayNotification("RL Schedule", this.getRelativePeriod(1) + " starts in 5 minutes.");
           }
         } else {
-          description = this.formatNumberUnit(this.minutesLeft, "minute", " left");
+          description = this.formatNumberUnit(this.minutesLeft, "minute") + " left.";
         }
         
         if (this.minutesLeft === 5) {
-          timeLeftAlarm("5 minutes left in " + this.getRelativePeriod(0));
+          displayNotification("RL Schedule", "5 minutes left in " + this.getRelativePeriod(0));
         }
       }
       
@@ -230,9 +230,9 @@ function arrayLastElement(arr) {
       return (time.hours % 12 || 12) + ":" + time.minutes;
     },
     
-    formatNumberUnit: function(number, unit, after) {
+    formatNumberUnit: function(number, unit, after, afterNot) {
       if (number === 0) {
-        return "";
+        return afterNot || "";
       }
       if (number === 1) {
         return number + " " + unit + (after || "");
@@ -309,15 +309,9 @@ function arrayLastElement(arr) {
     }
   };
   
-  function timeLeftAlarm(text) {
-    if (Settings.data.notifications) {
-      displayNotification("RL Schedule", text || dom.minutesLeft.textContent);
-    }
-  }
-  
   var lastNotification;
   function displayNotification(title, body) {
-    if (window.Notification.permission !== "granted") {
+    if (window.Notification.permission !== "granted" || !Settings.data.notifications) {
       return;
     }
     if (lastNotification) {
@@ -335,5 +329,4 @@ function arrayLastElement(arr) {
     }
     window.Notification.requestPermission();
   }
-  displayNotification("Check out our new Hotline Board!","Check out our new Hotline board feature at rlclock.tk/hotline !");
 })();

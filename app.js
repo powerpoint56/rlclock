@@ -15,6 +15,8 @@ function arrayLastElement(arr) {
 (function() {
   var ready = 2;
   var now = new Date();
+  var startWeekday = now.getDay();
+  var weekday;
   var currentMinutes;
   
   var dom = {
@@ -60,9 +62,8 @@ function arrayLastElement(arr) {
     },
     
     noSchool: function() {
-      var weekday = now.getDay();
       var title;
-      if (weekday === 6 || weekday === 0) { // Saturday or Sunday is weekend
+      if (startWeekday === 6 || startWeekday === 0) { // Saturday or Sunday is weekend
         title = "Weekend";
       } else {
         title = "No School";
@@ -150,6 +151,12 @@ function arrayLastElement(arr) {
       var done;
       
       now.setTime(Date.now());
+      weekday = now.getDay();
+      
+      if (weekday !== startWeekday) {
+        window.location.reload();
+      }
+      
       if (isFirstTime) {
         currentMinutes = this.fullMinutes(now.getHours(), now.getMinutes());
       } else {
@@ -158,7 +165,7 @@ function arrayLastElement(arr) {
       
       if (currentMinutes >= this.end) {
         title = "After school";
-        if (now.getDay() !== 5) { // predict the next school day if it isn't Friday
+        if (weekday !== 5) { // predict the next school day if it isn't Friday
           description = "Tomorrow starts with " + this.tomorrowDayType() + " block.";
         } else {
           description = "The next school day starts with " + this.tomorrowDayType() + " block.";

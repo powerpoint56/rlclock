@@ -44,7 +44,7 @@ function arrayLastElement(arr) {
         this.hallLength = this.fullMinutes(this.periods[1].end) - this.fullMinutes(this.periods[1].start);
       }
       this.firstPeriod = 1;
-      if (this.hallLength) {
+      if (this.hallLength && this.periods[1].name === "Hall") {
         this.firstPeriod++;
       }
       this.dayLetter = this.periods[this.firstPeriod].block;
@@ -190,7 +190,7 @@ function arrayLastElement(arr) {
            displayNotification("RL Schedule", this.getRelativePeriod(1) + " starts in 5 minutes.");
           }
         } else {
-          description = this.formatNumberUnit(this.minutesLeft, "minute") + " left.";
+          description = this.formatNumberUnit(this.minutesLeft, "minute") + " left";
         }
         
         if (this.minutesLeft === 5) {

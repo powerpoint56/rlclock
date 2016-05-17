@@ -52,7 +52,7 @@ function arrayLastElement(arr) {
       if (this.hallLength) {
         this.dayName += "-" + this.hallLength;
       }
-      this.lunchPeriod = (this.hallLength >= 45 ? 3 : 4);
+      this.lunchPeriod = schedule.lunchPeriod || (this.hallLength >= 45 ? 3 : 4);
     },
     
     error: function() {
@@ -73,8 +73,8 @@ function arrayLastElement(arr) {
     
     prepareScheduleDOM: function() {
       var fragment = document.createDocumentFragment();
-      var lunch = 0;
       var len = this.periods.length;
+      var lunch = 0;
       for (var i = 0; i < len; i++) {
         var current = this.periods[i];
         current.startMinutes = this.fullMinutes(current.start);
@@ -104,12 +104,14 @@ function arrayLastElement(arr) {
       dom.id("periods-list-blocks").appendChild(this.periodsListBlocks);
       dom.id("periods-list").style.display = "block";
       dom.id("about").style.display = "block";
+      
+      this.periodsChildren = dom.id("periods-list-blocks").childNodes;
     },
     
     checkReady: function() {
       if (--ready) return;
       
-      this.start = 495; // 495 minutes since midnight is at 8:15, when homeroom starts
+      this.start = this.periods[0].startMinutes;
       this.end = arrayLastElement(this.periods).endMinutes; // end of last period
       
       this.update(true);
@@ -117,7 +119,7 @@ function arrayLastElement(arr) {
     
     periodName: function(p) {
       if (p.period === this.lunchPeriod) {
-        return p.block + " - " + ["First Lunch", "In Between Lunches", "Second Lunch"][p.lunch];
+        return p.block + " - " + this.lunches[p.lunch];
       }
       return p.block || p.name;
     },
@@ -140,9 +142,11 @@ function arrayLastElement(arr) {
           }
         }
       } else {
+        this.periodsChildren[this.currentPeriod].classList.remove("period-highlight");
         this.currentPeriod++;
       }
       this.minutesLeft = (this.periods[this.currentPeriod].endMinutes - currentMinutes);
+      this.periodsChildren[this.currentPeriod].classList.add("period-highlight");
     },
     
     update: function(isFirstTime) {
@@ -169,6 +173,9 @@ function arrayLastElement(arr) {
           description = "Tomorrow starts with " + this.tomorrowDayType() + " block.";
         } else {
           description = "The next school day starts with " + this.tomorrowDayType() + " block.";
+        }
+        if (this.currentPeriod) {
+          this.periodsChildren[this.currentPeriod].classList.remove("period-highlight");
         }
         done = true;
       } else if (currentMinutes < this.start) {
@@ -245,7 +252,9 @@ function arrayLastElement(arr) {
         return number + " " + unit + (after || "");
       }
       return number + " " + unit + "s" + (after || "");
-    }
+    },
+    
+    lunches: ["First Lunch", "In Between Lunches", "Second Lunch"]
   };
     
   function httpGet(url, callback, error) {

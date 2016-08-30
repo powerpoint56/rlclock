@@ -49,7 +49,7 @@
       if (info.Author) {
         child = document.createElement("p");
         child.className = "author";
-        child.textContent = info.author;
+        child.textContent = info.Author;
         announcement.appendChild(child);
       }
       return announcement;

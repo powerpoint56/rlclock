@@ -13,6 +13,7 @@
     },
     loadJSON: function(json) {
       this.data = JSON.parse(json);
+      this.updateDom();
     },
     updateDOM: function() {
       var fragment = document.createDocumentFragment();
@@ -56,6 +57,7 @@
     }
   };
   
-  Hotline.update();
-  setInterval(Hotline.update.bind(Hotline), 10 * 60 * 1000); // update every 15 minutes
+ // Hotline.update();
+ // setInterval(Hotline.update.bind(Hotline), 10 * 60 * 1000); // update every 15 minutes
+ 
 })();

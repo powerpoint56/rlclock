@@ -34,19 +34,19 @@
       var announcement = document.createElement("div");
       announcement.className = "announcement";
       var child;
-      if (info.title) {
+      if (info.Name) {
         child = document.createElement("h6");
         child.className = "title";
         child.textContent = info.Name;
         announcement.appendChild(child);
       }
-      if (info.content) {
+      if (info.Description) {
         child = document.createElement("p");
         child.className = "content";
         child.textContent = info.Description;
         announcement.appendChild(child);
       }
-      if (info.author) {
+      if (info.Author) {
         child = document.createElement("p");
         child.className = "author";
         child.textContent = info.author;

@@ -56,7 +56,7 @@
       return announcement;
     }
   };
-  console.log(JSON.parse(document.getElementById("data").textContent));
+  console.log(document.getElementById("data").textContent);
  // Hotline.update();
  // setInterval(Hotline.update.bind(Hotline), 10 * 60 * 1000); // update every 15 minutes
  

@@ -18,6 +18,7 @@ function arrayLastElement(arr) {
   var startWeekday = now.getDay();
   var weekday;
   var currentMinutes;
+  var pageTitle = "RL Schedule";
   
   var dom = {
     id: function(name) {
@@ -168,6 +169,7 @@ function arrayLastElement(arr) {
       }
       
       if (currentMinutes >= this.end) {
+        document.title = pageTitle;
         title = "After school";
         if (weekday !== 5) { // predict the next school day if it isn't Friday
           description = "Tomorrow starts with " + this.tomorrowDayType() + " block.";
@@ -194,14 +196,16 @@ function arrayLastElement(arr) {
         if (this.minutesLeft <= 0) {
           description = "Passing time: " + this.formatNumberUnit(this.minutesLeft + 5, "minute") + " until " + this.getRelativePeriod(1);
           if (this.minutesLeft === 0) {
-           displayNotification("RL Schedule", this.getRelativePeriod(1) + " starts in 5 minutes.");
+            document.title = pageTitle;
+            displayNotification(pageTitle, this.getRelativePeriod(1) + " starts in 5 minutes.");
           }
         } else {
           description = this.formatNumberUnit(this.minutesLeft, "minute") + " left";
+          document.title = pageTitle + " (" + this.minutesLeft + ")";
         }
         
         if (this.minutesLeft === 5) {
-          displayNotification("RL Schedule", "5 minutes left in " + this.getRelativePeriod(0));
+          displayNotification(pageTitle, "5 minutes left in " + this.getRelativePeriod(0));
         }
       }
       

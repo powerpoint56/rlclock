@@ -1,0 +1,3 @@
+{
+    "props": ["hallLength", "periods", "lunchPeriod", "end", "start", "name", "period", "block"]
+}

@@ -5,6 +5,12 @@ module.exports = function(grunt) {
             build: {
                 src: "app.js",
                 dest: "app.min.js"
+            },
+            options: {
+                mangleProperties: true,
+                reserveDOMProperties: true,
+                reserveDOMCache: true,
+                exceptionsFiles: ["mangleExceptions.json"]
             }
         },
         cssmin: {

@@ -5,6 +5,9 @@ module.exports = function(grunt) {
             build: {
                 src: "app.js",
                 dest: "app.min.js"
+            },
+            options: {
+                mangleProperties: true
             }
         },
         cssmin: {

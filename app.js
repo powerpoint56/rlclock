@@ -8,10 +8,6 @@ if (!Date.now) {
   };
 }
 
-function arrayLastElement(arr) {
-  return arr[arr.length - 1];
-}
-
 (function() {
   var ready = 2;
   var now = new Date();
@@ -19,6 +15,10 @@ function arrayLastElement(arr) {
   var weekday;
   var currentMinutes;
   var pageTitle = "RL Schedule";
+  
+  function arrayLastElement(arr) {
+    return arr[arr.length - 1];
+  }
   
   var dom = {
     id: function(name) {
@@ -29,7 +29,7 @@ function arrayLastElement(arr) {
   
   var Day = {
     loadSchedule: function(schedule) {
-      this.isSchool = schedule.periods !== undefined;
+      this.isSchool = !!schedule.periods;
       if (!this.isSchool) { // no school
         return this.noSchool();
       }

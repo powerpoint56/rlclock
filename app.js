@@ -1,5 +1,3 @@
-/* global localStorage */
-
 "use strict";
 
 if (!Date.now) {
@@ -8,7 +6,7 @@ if (!Date.now) {
   };
 }
 
-(function() {
+(function(document, window) {
   var ready = 2;
   var now = new Date();
   var startWeekday = now.getDay();
@@ -291,7 +289,7 @@ if (!Date.now) {
       notifications: false
     },
     load: function() {
-      this.data = JSON.parse(localStorage.getItem("settings")) || this.data;
+      this.data = JSON.parse(window.localStorage.getItem("settings")) || this.data;
     },
     prepareDOM: function() {
       var currentSetting;
@@ -312,7 +310,7 @@ if (!Date.now) {
         currentSetting = this.allSettings[i];
         this.data[currentSetting.getAttribute("data-rep")] = currentSetting.checked;
       }
-      localStorage.setItem("settings", JSON.stringify(this.data));
+      window.localStorage.setItem("settings", JSON.stringify(this.data));
       if (this.data.notifications) {
         notificationPermission();
       }
@@ -349,4 +347,4 @@ if (!Date.now) {
     }
     window.Notification.requestPermission();
   }
-})();
+})(document, window);

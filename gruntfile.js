@@ -18,11 +18,19 @@ module.exports = function(grunt) {
                 src: "app.css",
                 dest: "app.min.css"
             }
+        },
+        minifyHtml: {
+            dist: {
+                files: {
+                    "index.html": "dev.html"
+                }
+            }
         }
     });
     
     grunt.loadNpmTasks("grunt-contrib-uglify");
     grunt.loadNpmTasks("grunt-contrib-cssmin");
+    grunt.loadNpmTasks("grunt-minify-html");
     
-    grunt.registerTask("default", ["uglify", "cssmin"]);
+    grunt.registerTask("default", ["uglify", "cssmin", "minifyHtml"]);
 };

@@ -199,7 +199,7 @@ if (!Date.now) {
           }
         } else {
           description = this.formatNumberUnit(this.minutesLeft, "minute") + " left";
-          document.title = pageTitle + " (" + this.minutesLeft + ")";
+          document.title = "(" + this.minutesLeft + ") " + pageTitle;
         }
         
         if (this.minutesLeft === 5) {

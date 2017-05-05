@@ -42,7 +42,10 @@ if (!Date.now) {
       if (this.periods[1].name === "Hall") { // in case hallLength isn't given, calculate from Hall period. REMOVE if API always provides hallLength on a hall day
         this.hallLength = this.fullMinutes(this.periods[1].end) - this.fullMinutes(this.periods[1].start);
       }
-      this.firstPeriod = schedule.firstPeriod;
+      this.firstPeriod = 1;
+      if (this.hallLength && this.periods[1].name === "Hall") {
+        this.firstPeriod++;
+      }
       this.dayLetter = this.periods[this.firstPeriod].block;
       this.dayName = this.dayLetter;
       if (this.hallLength) {

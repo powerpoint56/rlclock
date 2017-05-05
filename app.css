@@ -1,0 +1,203 @@
+/* Colors
+
+Red:
+    lighter: #a92020, #c32148
+    main: #95100f
+    darker: #7d0d0c
+
+Green: #7e9c54, #a3ba82
+
+*/
+
+body {
+    font-size: 1em;
+    font-family: 'Open Sans', sans-serif;
+    background-color: #f0f0f0;
+    margin: 1em 3em 3em 3em;
+}
+
+h2 {
+    margin: 0;
+    padding: 0;
+    font-weight: 500;
+}
+
+h3 {
+    margin: 0;
+    padding: 0;
+    font-weight: 500;
+}
+
+/* --- selections --- */
+
+::-moz-selection {
+  color: white;
+  background-color: #A92020;
+  text-shadow: none;
+}
+::selection {
+  color: white;
+  background-color: #A92020;
+  text-shadow: none;
+}
+
+/* --- forms --- */
+button {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  background-color: #ddd;
+  border: 1px solid #333;
+  padding: 5px;
+  margin: 0;
+  font-family: 'Open Sans', 'Gill Sans', sans-serif;
+  font-size: 1em;
+  transition: background-color .2s;
+}
+
+button:hover,
+button:active {
+  background-color: #aaa;
+}
+
+input[type=checkbox] {
+  vertical-align: text-bottom;
+}
+
+/* --- current info --- */
+#current {
+  text-align: center;
+  margin: 0 auto 2em auto;
+  display: block;
+}
+
+#current-title {
+  color: #a5201f;
+  font-size: 2.5em;
+}
+
+/* --- periods --- */
+#periods-list {
+    display: none;
+}
+
+#periods-list-heading {
+    font-size: 2em;
+}
+
+/* --- list classes --- */
+
+.list-section {
+    background-color: #f8f8f8;
+    margin-left: auto;
+    margin-right: auto;
+    padding: 1em;
+    max-width: 55em;
+}
+
+.list-item {
+    background-color: #fff;
+    margin: 0.5em auto 0 auto;
+    padding: 0.7em;
+    line-height: 1em;
+    overflow: auto;
+}
+
+.list-item-letter {
+    float: left;
+    margin: 0 0 0 3px;
+    padding: 0;
+}
+
+.list-item-time {
+    float: right;
+    font-size: 0.7em;
+    color: #595959;
+    margin: 0 3px 0 0;
+    padding: 0;
+}
+
+.period-highlight {
+    background-color: #a3ba82;
+}
+
+/* --- nav --- */
+nav {
+    margin: 0;
+    padding: 0;
+    position: fixed;
+    top: 0;
+    left: 0;
+}
+
+.nav-item {
+    background-color: #555;
+    cursor: default;
+    width: 64px;
+    height: 64px;
+    line-height: 64px;
+    display: block;
+    text-decoration: none;
+    color: white;
+    text-align: center;
+    position: relative;
+    transition: all .3s ease-in-out;
+}
+
+.nav-item:hover, .nav-item:active {
+  background-color: #a92020;
+  opacity: 1;
+}
+
+#nav-button {
+    z-index: 1;
+    opacity: 0.6;
+    background-color: #686868;
+}
+
+nav:hover #nav-button {
+  background-color: #7d0d0c;
+  opacity: 1;
+}
+
+#nav-content {
+    transform: translateY(-120%);
+    transition: all .3s ease-in-out;
+    z-index: 0;
+    opacity: 0;
+    pointer-events: none;
+}
+
+nav:hover #nav-content {
+    transform: none;
+    opacity: 1;
+    pointer-events: auto;
+}
+
+#about {
+    display: none;
+    margin-top: 3em;
+}
+
+/* --- settings --- */
+#settings {
+    position: fixed;
+    top: 0;
+    right: 0;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity .3s ease-in-out;
+    border: 1px solid black;
+}
+
+#settings.appear {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+#settings label {
+  display: block;
+}
+
+#settings-submit {
+    margin-top: 1em;
+}

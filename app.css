@@ -86,6 +86,11 @@ input[type=checkbox] {
 
 /* --- list classes --- */
 
+.list {
+    background-color: #fff;
+    padding: 1em;
+}
+
 .list-section {
     background-color: #f8f8f8;
     margin-left: auto;

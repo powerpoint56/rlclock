@@ -265,7 +265,7 @@ if (!Date.now) {
   }
   
   httpGet(
-    "todays_schedule.json",
+    "//casper.roxburylatin.org/todays_schedule.json",
     function() {
       Day.loadSchedule(JSON.parse(this.responseText));
     },

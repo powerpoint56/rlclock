@@ -42,10 +42,7 @@ if (!Date.now) {
       if (this.periods[1].name === "Hall") { // in case hallLength isn't given, calculate from Hall period. REMOVE if API always provides hallLength on a hall day
         this.hallLength = this.fullMinutes(this.periods[1].end) - this.fullMinutes(this.periods[1].start);
       }
-      this.firstPeriod = 1;
-      if (this.hallLength && this.periods[1].name === "Hall") {
-        this.firstPeriod++;
-      }
+      this.firstPeriod = schedule.firstPeriod;
       this.dayLetter = this.periods[this.firstPeriod].block;
       this.dayName = this.dayLetter;
       if (this.hallLength) {
@@ -79,7 +76,7 @@ if (!Date.now) {
         current.startMinutes = this.fullMinutes(current.start);
         current.endMinutes = this.fullMinutes(current.end);
         
-        if (current.period === this.lunchPeriod) {
+        if (current.period === this.lunchPeriod && current.name !== "Hall") {
           current.lunch = lunch++;
         }
         
@@ -117,7 +114,7 @@ if (!Date.now) {
     },
     
     periodName: function(p) {
-      if (p.period === this.lunchPeriod) {
+      if (p.period === this.lunchPeriod && p.name !== "Hall") {
         return p.block + " - " + this.lunches[p.lunch];
       }
       return p.block || p.name;
@@ -268,7 +265,7 @@ if (!Date.now) {
   }
   
   httpGet(
-    "//casper.roxburylatin.org/todays_schedule.json",
+    "todays_schedule.json",
     function() {
       Day.loadSchedule(JSON.parse(this.responseText));
     },

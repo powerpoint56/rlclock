@@ -41,6 +41,16 @@ h3 {
   text-shadow: none;
 }
 
+.hide {
+  display: none;
+}
+
+.main {
+  max-width: 55em;
+  margin-left: auto;
+  margin-right: auto;
+}
+
 /* --- forms --- */
 button {
   -webkit-appearance: none;
@@ -80,10 +90,6 @@ input[type=checkbox] {
 }
 
 /* --- periods --- */
-#periods-list {
-  display: none;
-}
-
 #periods-list-heading {
   font-size: 2em;
 }
@@ -97,10 +103,7 @@ input[type=checkbox] {
 
 .list-section {
   background-color: #f8f8f8;
-  margin-left: auto;
-  margin-right: auto;
   padding: 1em;
-  max-width: 55em;
 }
 
 .list-item {
@@ -183,7 +186,6 @@ nav:hover #nav-content {
 }
 
 #about {
-  display: none;
   margin-top: 3em;
 }
 

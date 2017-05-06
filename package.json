@@ -1,6 +1,6 @@
 {
   "name": "rlclock",
-  "version": "2.0.0",
+  "version": "3.1.0",
   "description": "An RL school schedule app which runs entirely on the client side.",
   "devDependencies": {
     "grunt": "",

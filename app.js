@@ -58,7 +58,7 @@ if (!Date.now) {
     error: function() {
       ready++;
       dom.id("periods-list").textContent = "Sorry, there has been an error. Please try reloading soon.";
-      dom.id("periods-list").style.display = "block";
+      dom.id("periods-list").classList.remove("hide");
     },
     
     noSchool: function() {
@@ -104,8 +104,7 @@ if (!Date.now) {
       this.periodsListBlocks = fragment;
       dom.id("periods-list-heading").textContent = this.dayName;
       dom.id("periods-list-blocks").appendChild(this.periodsListBlocks);
-      dom.id("periods-list").style.display = "block";
-      dom.id("about").style.display = "block";
+      dom.id("periods-list").classList.remove("hide");
       
       this.periodsChildren = dom.id("periods-list-blocks").childNodes;
     },
@@ -291,6 +290,17 @@ if (!Date.now) {
     
     Settings.load();
     dom.id("settings-button").addEventListener("click", Settings.toggle.bind(Settings));
+    dom.id("about-toggle").addEventListener("click", function(e) {
+      e.preventDefault();
+      if (dom.id("about-more").textContent) {
+        dom.id("about-more").classList.toggle("hide");
+      } else {
+        httpGet("about.txt", function() {
+          dom.id("about-more").textContent = this.responseText;
+        });
+      }
+      return false;
+    });
   });
   
   var Settings = {

@@ -268,7 +268,7 @@ if (!Date.now) {
   }
   
   httpGet(
-    "//casper.roxburylatin.org/todays_schedule.json",
+    window.location.hostname === "rlclock.tk" ? "//casper.roxburylatin.org/todays_schedule.json" : "todays_schedule.json",
     function() {
       Day.loadSchedule(JSON.parse(this.responseText));
     },

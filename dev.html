@@ -11,6 +11,7 @@
     <script src="app.min.js"></script>
   </head>
   <body>
+    <input type="checkbox" class="dark">
     <nav id="nav">
       <div id="nav-button" class="nav-item">&#9776;</div>
       <div id="nav-content">
@@ -22,28 +23,30 @@
         <div id="settings-button" class="nav-item">&#9881;</div>
       </div>
     </nav>
-    <div class="main">
-      <section id="current">
-        <h2 id="current-title"> </h2>
-        <p id="current-description"> </p>
-      </section>
-      <section id="periods-list" class="list-section hide">
-        <h3 id="periods-list-heading"></h3>
-        <div id="periods-list-blocks"></div>
-      </section>
-      <div id="about">
-        <p>v3.1 Jonathan Weiss, Gil Rosenthal</p>
-        <a href="#" id="about-toggle">More</a>
-        <p id="about-more"></p>
+    <div class="wrap">
+      <div class="main">
+        <section id="current">
+          <h2 id="current-title"> </h2>
+          <p id="current-description"> </p>
+        </section>
+        <section id="periods-list" class="list-section hide">
+          <h3 id="periods-list-heading"></h3>
+          <div id="periods-list-blocks"></div>
+        </section>
+        <div id="about">
+          <p>v3.1 Jonathan Weiss, Gil Rosenthal</p>
+          <a href="#" id="about-toggle">More</a>
+          <p id="about-more"></p>
+        </div>
       </div>
-    </div>
-    <div id="settings" class="list">
-      <h2>Settings</h2>
-      <p>Currently, settings are not permanent and are only stored locally.</p>
-      <div id="settings-form">
-        <label><input type="checkbox" data-rep="notifications">Notifications: show before the end of a block</label>
+      <div id="settings" class="list">
+        <h2>Settings</h2>
+        <p>Currently, settings are not permanent and are only stored locally.</p>
+        <div id="settings-form">
+          <label><input type="checkbox" data-rep="notifications">Notifications: show before the end of a block</label>
+        </div>
+        <button type="button" id="settings-submit">Save</button>
       </div>
-      <button type="button" id="settings-submit">Save</button>
     </div>
   </body>
 </html>

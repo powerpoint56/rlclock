@@ -1,1 +1,1 @@
-v3.1 (Weiss): More simple and responsive layout, visual improvements. The next day type is cached so it can be shown on the weekend. Efficiency fixes. Better About section!
+v3.1 (Weiss 5/6/17): More simple and responsive layout, dark theme. The next day type is cached so it can be shown on the weekend. Efficiency fixes. Better About section!

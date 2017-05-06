@@ -75,6 +75,10 @@ input[type=checkbox] {
   font-size: 2.5em;
 }
 
+#current-description {
+  height: 1em;
+}
+
 /* --- periods --- */
 #periods-list {
   display: none;

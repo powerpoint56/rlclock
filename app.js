@@ -52,6 +52,7 @@ if (!Date.now) {
         this.dayName += "-" + this.hallLength;
       }
       this.lunchPeriod = schedule.lunchPeriod || (this.hallLength >= 45 ? 3 : 4);
+      window.localStorage.setItem("next-day", this.tomorrowDayType());
     },
     
     error: function() {
@@ -68,6 +69,8 @@ if (!Date.now) {
         title = "No School";
       }
       dom.id("current-title").textContent = title;
+      
+      dom.id("current-description").textContent = this.displayTomorrowDayType();
     },
     
     prepareScheduleDOM: function() {
@@ -169,11 +172,7 @@ if (!Date.now) {
       if (currentMinutes >= this.end) {
         document.title = pageTitle;
         title = "After school";
-        if (weekday !== 5) { // predict the next school day if it isn't Friday
-          description = "Tomorrow starts with " + this.tomorrowDayType() + " block.";
-        } else {
-          description = "The next school day starts with " + this.tomorrowDayType() + " block.";
-        }
+        description = this.displayTomorrowDayType();
         if (this.currentPeriod) {
           this.periodsChildren[this.currentPeriod].classList.remove("period-highlight");
         }
@@ -216,9 +215,19 @@ if (!Date.now) {
     },
     
     tomorrowDayType: function() {
-      var blocks = "HGFEDCBA";
-      var position = blocks.indexOf(this.dayLetter) + 1 + this.isDrop();
-      return blocks[position % 8];
+      if (this.dayLetter) {
+        var blocks = "HGFEDCBA";
+        var position = blocks.indexOf(this.dayLetter) + 1 + this.isDrop();
+        return blocks[position % 8];
+      } else {
+        return window.localStorage.getItem("next-day") || 0;
+      }
+    },
+    
+    displayTomorrowDayType: function() {
+      var type = this.tomorrowDayType();
+      if (!type) return "";
+      return (weekday > 0 && weekday < 5 ? "Tomorrow" : "The next school day") + " starts with " + type + " block."; // (during the week, tomorrow; weekend, the next school day)
     },
     
     fullMinutes: function(arg1, arg2) { // hours:minutes into minutes since midnight

@@ -32,12 +32,12 @@ h3 {
 
 ::-moz-selection {
   color: white;
-  background-color: #A92020;
+  background-color: #a92020;
   text-shadow: none;
 }
 ::selection {
   color: white;
-  background-color: #A92020;
+  background-color: #a92020;
   text-shadow: none;
 }
 
@@ -122,7 +122,7 @@ input[type=checkbox] {
 }
 
 .period-highlight {
-    background-color: #a3ba82;
+    background-color: #b5cf92;
 }
 
 /* --- nav --- */

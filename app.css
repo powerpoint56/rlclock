@@ -19,6 +19,7 @@ body {
   background-color: #f0f0f0;
   padding: 1em 3em 3em 3em;
   transition: background .3s;
+  height: 100vh;
 }
 
 .dark:checked ~ .wrap {

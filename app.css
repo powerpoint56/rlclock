@@ -9,22 +9,17 @@ Green: #7e9c54, #a3ba82
 
 */
 
-html {
-  height: 100%;
-}
-
 body {
   font-size: 1em;
   font-family: 'Open Sans', sans-serif;
   margin: 0;
-  min-height: 100%;
 }
 
 .wrap {
   background-color: #f0f0f0;
   padding: 1em 3em 3em 3em;
   transition: background .3s;
-  height: 100%;
+  min-height: 100vh;
   box-sizing: border-box;
 }
 

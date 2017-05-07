@@ -17,7 +17,7 @@ body {
   font-size: 1em;
   font-family: 'Open Sans', sans-serif;
   margin: 0;
-  height: 100%;
+  min-height: 100%;
 }
 
 .wrap {
@@ -212,6 +212,10 @@ input[type=checkbox] {
   background-color: #b5cf92;
 }
 
+.dark:checked ~ .wrap .period-highlight {
+  background-color: #959f52;
+}
+
 /* --- nav --- */
 nav {
   margin: 0;
@@ -255,7 +259,7 @@ nav {
 }
 
 .dark:checked ~ nav #nav-button {
-  background-color: #d8d8d8;
+  background-color: #888;
   color: #222;
 }
 

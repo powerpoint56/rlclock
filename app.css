@@ -18,7 +18,7 @@ body {
 .wrap {
   background-color: #f0f0f0;
   padding: 1em 3em 3em 3em;
-  transition: background .3s;
+  transition: all .3s;
   min-height: 100vh;
   box-sizing: border-box;
 }
@@ -84,6 +84,7 @@ a {
   -moz-appearance: none;
   appearance: none;
   padding: 1px;
+  transition: all .3s;
 }
 
 .dark:focus {
@@ -116,7 +117,7 @@ button {
   margin: 0;
   font-family: 'Open Sans', 'Gill Sans', sans-serif;
   font-size: 1em;
-  transition: background-color .2s;
+  transition: all .2s;
 }
 
 button:hover,

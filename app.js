@@ -301,6 +301,9 @@ if (!Date.now) {
       }
       return false;
     });
+    if (now.getHours() >= 19 || now.getHours() <= 6) {
+      document.querySelector(".dark").checked = true;
+    }
   });
   
   var Settings = {

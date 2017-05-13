@@ -301,7 +301,7 @@ if (!Date.now) {
       }
       return false;
     });
-    if ((now.getHours() >= 19 || now.getHours() <= 6) && window.localStorage.getItem("dark") !== "false") { // dark mode preference setting
+    if (((now.getHours() >= 19 || now.getHours() <= 6) && window.localStorage.getItem("dark") !== "false") || window.localStorage.getItem("dark") !== "true") { // dark mode preference setting
       document.querySelector(".dark").checked = true;
     }
     document.querySelector(".dark").addEventListener("click", function(e) {

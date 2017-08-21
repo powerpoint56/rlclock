@@ -7,13 +7,13 @@
     <link href="favicon.ico" rel="icon">
     <link href="RoxburyHomescreenIcon.png" rel="apple-touch-icon">
     <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet" type="text/css">
-    <link href="app.min.css" rel="stylesheet" type="text/css">
+    <link href="app.css" rel="stylesheet" type="text/css">
     <script src="app.min.js"></script>
   </head>
   <body>
     <input type="checkbox" class="dark">
     <nav id="nav">
-      <div id="nav-button" class="nav-item">&#9776;</div>
+      <input type="checkbox" id="nav-button" class="nav-item">
       <div id="nav-content">
         <a href="https://roxburylatin.myschoolapp.com" class="nav-item" target="_blank">RL</a>
         <a href="https://www.sagedining.com/menus/roxburylatin" class="nav-item" target="_blank">Lunch</a>
@@ -29,9 +29,11 @@
           <h2 id="current-title"> </h2>
           <p id="current-description"> </p>
         </section>
-        <section id="periods-list" class="list-section hide">
-          <h3 id="periods-list-heading"></h3>
-          <div id="periods-list-blocks"></div>
+        <section id="schedule">
+          <div id="periods-list" class="list-section hide">
+            <h3 id="periods-list-heading"></h3>
+            <div id="periods-list-blocks"></div>
+          </div>
         </section>
         <div id="about">
           <p>v3.1 Jonathan Weiss, Gil Rosenthal</p>

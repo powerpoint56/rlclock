@@ -190,6 +190,7 @@ input[type=checkbox] {
   float: left;
   margin: 0 0 0 3px;
   padding: 0;
+  white-space: pre-wrap;
 }
 
 .list-item-time {
@@ -252,6 +253,14 @@ nav {
   z-index: 1;
   opacity: 0.6;
   background-color: #686868;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  margin: 0;
+}
+
+#nav-button:after {
+  content: '\2630';
 }
 
 .dark:checked ~ nav #nav-button {
@@ -259,7 +268,7 @@ nav {
   color: #222;
 }
 
-nav:hover #nav-button {
+nav:hover #nav-button, #nav-button:focus {
   background-color: #7d0d0c;
   opacity: 1;
 }
@@ -278,7 +287,7 @@ nav:hover #nav-button {
   pointer-events: none;
 }
 
-nav:hover #nav-content {
+nav:hover #nav-content, #nav-button:focus ~ #nav-content {
   transform: none;
   opacity: 1;
   pointer-events: auto;
@@ -286,6 +295,10 @@ nav:hover #nav-content {
 
 #about {
   margin-top: 3em;
+}
+
+#nav-button:focus {
+  outline: none;
 }
 
 /* --- settings --- */

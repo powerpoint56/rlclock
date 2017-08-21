@@ -71,6 +71,41 @@ if (!Date.now) {
       dom.id("current-title").textContent = title;
       
       dom.id("current-description").textContent = this.displayTomorrowDayType();
+      
+      //this.fetchExamSchedule();
+    },
+    
+    fetchExamSchedule: function() {
+      httpGet(
+        "/exam_schedule.json",
+        function() {
+          Day.examSchedule(JSON.parse(this.responseText));
+        },
+        Day.error
+      );
+    },
+    
+    examSchedule: function(schedule) {
+      var periodsList = document.createDocumentFragment();
+      
+      dom.id("periods-list").classList.add("hide");
+      
+      for (var x in schedule.days) {
+        var list = document.createElement("div");
+        list.className = "list-section";
+        
+        var heading = document.createElement("h3");
+        heading.textContent = x;
+        list.appendChild(heading);
+        
+        var blocks = document.createElement("div");
+        for (var i = 0; i < schedule.days[x].length; ++i) {
+          blocks.appendChild(this.createBlock(schedule.days[x][i][0], schedule.days[x][i][1]));
+        }
+        list.appendChild(blocks);
+        
+        dom.id("schedule").appendChild(list);
+      }
     },
     
     prepareScheduleDOM: function() {
@@ -86,23 +121,31 @@ if (!Date.now) {
           current.lunch = lunch++;
         }
         
-        var block = document.createElement("div");
-        block.className = "list-item";
-        
-        var letter = document.createElement("span");
-        letter.className = "list-item-letter";
-        letter.textContent = this.periodName(current);
-        block.appendChild(letter);
-        
-        var time = document.createElement("span");
-        time.className = "list-item-time";
-        time.textContent = this.formatMinutesAsTime(current.startMinutes) + "-" + this.formatMinutesAsTime(current.endMinutes);
-        block.appendChild(time);
-        
-        fragment.appendChild(block);
+        fragment.appendChild(this.createBlock(this.periodName(current), this.formatMinutesAsTime(current.startMinutes) + "-" + this.formatMinutesAsTime(current.endMinutes)));
       }
+      this.updatePeriodsList(fragment, this.dayName);
+    },
+    
+    createBlock: function(letterValue, timeValue) {
+      var block = document.createElement("div");
+      block.className = "list-item";
+      
+      var letter = document.createElement("span");
+      letter.className = "list-item-letter";
+      letter.textContent = letterValue;
+      block.appendChild(letter);
+      
+      var time = document.createElement("span");
+      time.className = "list-item-time";
+      time.textContent = timeValue;
+      block.appendChild(time);
+      
+      return block;
+    },
+    
+    updatePeriodsList: function(fragment, title) {
       this.periodsListBlocks = fragment;
-      dom.id("periods-list-heading").textContent = this.dayName;
+      dom.id("periods-list-heading").textContent = title;
       dom.id("periods-list-blocks").appendChild(this.periodsListBlocks);
       dom.id("periods-list").classList.remove("hide");
       
@@ -175,6 +218,7 @@ if (!Date.now) {
         if (this.currentPeriod) {
           this.periodsChildren[this.currentPeriod].classList.remove("period-highlight");
         }
+        //this.fetchExamSchedule();
         done = true;
       } else if (currentMinutes < this.start) {
         title = "Before school";

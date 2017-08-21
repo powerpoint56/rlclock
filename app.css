@@ -111,6 +111,7 @@ a {
 button {
   -webkit-appearance: none;
   -moz-appearance: none;
+  appearance: none;
   background-color: #ddd;
   border: 1px solid #333;
   padding: 5px;
@@ -257,10 +258,15 @@ nav {
   -moz-appearance: none;
   appearance: none;
   margin: 0;
+  border-radius: 0;
 }
 
 #nav-button:after {
   content: '\2630';
+}
+
+#nav-button:focus {
+  outline: none;
 }
 
 .dark:checked ~ nav #nav-button {
@@ -268,7 +274,7 @@ nav {
   color: #222;
 }
 
-nav:hover #nav-button, #nav-button:focus {
+nav:hover #nav-button, #nav-button:focus:checked {
   background-color: #7d0d0c;
   opacity: 1;
 }
@@ -287,7 +293,7 @@ nav:hover #nav-button, #nav-button:focus {
   pointer-events: none;
 }
 
-nav:hover #nav-content, #nav-button:focus ~ #nav-content {
+nav:hover #nav-content, #nav-button:focus:checked ~ #nav-content {
   transform: none;
   opacity: 1;
   pointer-events: auto;
@@ -295,10 +301,6 @@ nav:hover #nav-content, #nav-button:focus ~ #nav-content {
 
 #about {
   margin-top: 3em;
-}
-
-#nav-button:focus {
-  outline: none;
 }
 
 /* --- settings --- */

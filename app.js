@@ -346,9 +346,9 @@ if (!Date.now) {
       return false;
     });
     if (((now.getHours() >= 19 || now.getHours() <= 6) && window.localStorage.getItem("dark") !== "false") || window.localStorage.getItem("dark") === "true") { // dark mode preference setting
-      document.querySelector(".dark").checked = true;
+      document.querySelector("#dark").checked = true;
     }
-    document.querySelector(".dark").addEventListener("click", function(e) {
+    document.querySelector("#dark").addEventListener("click", function(e) {
       window.localStorage.setItem("dark", e.target.checked);
     });
   });

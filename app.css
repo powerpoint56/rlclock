@@ -300,6 +300,10 @@ nav:hover #nav-content, #nav-button:focus:checked ~ #nav-content {
   margin-top: 3em;
 }
 
+#about-more {
+  white-space: pre-wrap;
+}
+
 /* --- settings --- */
 #settings {
   position: fixed;

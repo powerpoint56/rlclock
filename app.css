@@ -85,7 +85,8 @@ a {
   position: absolute;
   right: 0;
   top: 0;
-  padding: 1px;
+  padding: 2px;
+  font-size: 14px;
   transition: all .3s;
 }
 
@@ -140,6 +141,12 @@ input[type=checkbox] {
 
 #dark:checked ~ .wrap #current-title {
   color: #f5302f;
+}
+
+@media (max-width: 640px) {
+  #current-title {
+    padding-top: 1.5em;
+  }
 }
 
 #current-description {
@@ -232,6 +239,7 @@ nav {
   position: relative;
   transition: all .3s ease-in-out;
   border: 0;
+  user-select: none;
 }
 
 #dark:checked ~ nav .nav-item {
@@ -271,12 +279,12 @@ nav {
   color: #fff;
 }
 
-nav:hover #nav-button, #nav-button:focus:checked {
+.hoverable nav:hover #nav-button, #nav-button:checked {
   background-color: #7d0d0c;
   opacity: 1;
 }
 
-#dark:checked ~ nav:hover #nav-button {
+.hoverable #dark:checked ~ nav:hover #nav-button, #dark:checked ~ nav #nav-button:checked {
   background-color: #dd0d0c;
   opacity: 1;
   color: white;
@@ -290,7 +298,7 @@ nav:hover #nav-button, #nav-button:focus:checked {
   pointer-events: none;
 }
 
-nav:hover #nav-content, #nav-button:focus:checked ~ #nav-content {
+.hoverable nav:hover #nav-content, #nav-button:checked ~ #nav-content {
   transform: none;
   opacity: 1;
   pointer-events: auto;

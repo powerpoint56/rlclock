@@ -6,6 +6,10 @@ if (!Date.now) {
   };
 }
 
+if (!("ontouchstart" in document.documentElement) && screen.width > 640) {
+  document.documentElement.classList.add("hoverable");
+}
+
 (function(document, window) {
   var ready = 2;
   var now = new Date();

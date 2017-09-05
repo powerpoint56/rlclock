@@ -76,18 +76,37 @@ a {
   margin-right: auto;
 }
 
+.corner {
+  position: absolute;
+  right: 0;
+  top: 0;
+}
+
+#banner {
+  padding: 5px;
+  background-color: #fcbd5f;
+  display: inline-block;
+  cursor: default;
+}
+
+.fadeable {
+  transition: opacity .3s;
+}
+
+.fade {
+  opacity: 0;
+}
+
 #dark {
   position: absolute;
   left: -9999px;
 }
 
 #dark-label {
-  position: absolute;
-  right: 0;
-  top: 0;
   padding: 2px;
-  font-size: 14px;
-  transition: all .3s;
+  width: 3em;
+  text-align: center;
+  display: inline-block;
 }
 
 #dark-label:after {
@@ -96,9 +115,10 @@ a {
   color: #777;
   background-color: #ccc;
   opacity: 0.6;
+  transition: all .3s;
 }
 
-#dark:checked ~ #dark-label:after {
+#dark:checked ~ .corner #dark-label:after {
   content: 'Dark';
   color: #fff;
   background-color: #888;

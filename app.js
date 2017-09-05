@@ -352,9 +352,19 @@ if (!("ontouchstart" in document.documentElement) && screen.width > 640) {
     if (((now.getHours() >= 19 || now.getHours() <= 6) && window.localStorage.getItem("dark") !== "false") || window.localStorage.getItem("dark") === "true") { // dark mode preference setting
       document.querySelector("#dark").checked = true;
     }
-    document.querySelector("#dark").addEventListener("click", function(e) {
+    dom.id("dark").addEventListener("click", function(e) {
       window.localStorage.setItem("dark", e.target.checked);
     });
+    
+    // domain notification
+    if (!window.localStorage.getItem("domain")) {
+      var banner = dom.id("banner");
+      banner.classList.remove("fade");
+      banner.addEventListener("click", function() {
+        window.localStorage.setItem("domain", 1);
+        banner.classList.add("fade");
+      });
+    }
   });
   
   var Settings = {

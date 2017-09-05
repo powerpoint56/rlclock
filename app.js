@@ -324,7 +324,7 @@ if (!("ontouchstart" in document.documentElement) && screen.width > 640) {
   }
   
   httpGet(
-    window.location.hostname === "rlclock.tk" ? "//casper.roxburylatin.org/todays_schedule.json" : "todays_schedule.json",
+    window.location.hostname === "rlclock.ml" ? "//casper.roxburylatin.org/todays_schedule.json" : "todays_schedule.json",
     function() {
       Day.loadSchedule(JSON.parse(this.responseText));
     },

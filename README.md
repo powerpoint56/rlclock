@@ -1,2 +1,2 @@
-# rlclock.github.io
-The V2 Version of rlclock.github.io served via github pages
+# rlclock.ml
+The V2 Version of rlclock.ml served via github pages

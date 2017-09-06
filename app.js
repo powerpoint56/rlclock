@@ -349,12 +349,6 @@ if (!("ontouchstart" in document.documentElement) && screen.width > 640) {
       }
       return false;
     });
-    if (((now.getHours() >= 19 || now.getHours() <= 6) && window.localStorage.getItem("dark") !== "false") || window.localStorage.getItem("dark") === "true") { // dark mode preference setting
-      document.querySelector("#dark").checked = true;
-    }
-    dom.id("dark").addEventListener("click", function(e) {
-      window.localStorage.setItem("dark", e.target.checked);
-    });
     
     // domain notification
     if (!window.localStorage.getItem("domain")) {
@@ -373,6 +367,12 @@ if (!("ontouchstart" in document.documentElement) && screen.width > 640) {
     },
     load: function() {
       this.data = JSON.parse(window.localStorage.getItem("settings")) || this.data;
+      if (this.data.dark !== false) {
+        if (this.data.dark || (now.getHours() >= 19 || now.getHours() <= 6)) {
+          dom.id("dark").checked = true;
+          dom.id("settings-form").querySelector('[data-rep="dark"]').checked = true;
+        }
+      }
     },
     prepareDOM: function() {
       var currentSetting;
@@ -397,6 +397,7 @@ if (!("ontouchstart" in document.documentElement) && screen.width > 640) {
       if (this.data.notifications) {
         notificationPermission();
       }
+      dom.id("dark").checked = this.data.dark;
     },
     submit: function() {
       this.save();

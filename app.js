@@ -56,7 +56,10 @@ if (!("ontouchstart" in document.documentElement) && screen.width > 640) {
         this.dayName += "-" + this.hallLength;
       }
       this.lunchPeriod = schedule.lunchPeriod || (this.hallLength >= 45 ? 3 : 4);
-      window.localStorage.setItem("next-day", this.tomorrowDayType());
+      if (startWeekday === 5) {
+        window.localStorage.setItem("next-day", this.tomorrowDayType());
+        window.localStorage.setItem("next-day-rec", now.getDate());
+      }
     },
     
     error: function() {
@@ -267,7 +270,11 @@ if (!("ontouchstart" in document.documentElement) && screen.width > 640) {
         var position = blocks.indexOf(this.dayLetter) + 1 + this.isDrop();
         return blocks[position % 8];
       } else {
-        return window.localStorage.getItem("next-day") || 0;
+        if (Math.abs(now.getDate() - window.localStorage.getItem("next-day-rec")) < 5) {
+          return window.localStorage.getItem("next-day");
+        } else {
+          return 0;
+        }
       }
     },
     
@@ -368,7 +375,7 @@ if (!("ontouchstart" in document.documentElement) && screen.width > 640) {
     load: function() {
       this.data = JSON.parse(window.localStorage.getItem("settings")) || this.data;
       if (this.data.dark !== false) {
-        if (this.data.dark || (now.getHours() >= 19 || now.getHours() <= 6)) {
+        if (this.data.dark || ((now.getHours() >= 19 || now.getHours() <= 6))) {
           dom.id("dark").checked = true;
           dom.id("settings-form").querySelector('[data-rep="dark"]').checked = true;
         }

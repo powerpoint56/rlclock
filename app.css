@@ -82,12 +82,12 @@ a {
   top: 0;
 }
 
-#banner {
+/*#banner {
   padding: 5px;
   background-color: #fcbd5f;
   display: inline-block;
   cursor: default;
-}
+}*/
 
 .fadeable {
   transition: opacity .3s;

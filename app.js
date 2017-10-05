@@ -56,7 +56,7 @@ if (!("ontouchstart" in document.documentElement) && screen.width > 640) {
         this.dayName += "-" + this.hallLength;
       }
       this.lunchPeriod = schedule.lunchPeriod || (this.hallLength >= 45 ? 3 : 4);
-      if (startWeekday === 5) {
+      if (startWeekday === 5) { // on fridays, save the next school day (in case user checks on weekend)
         window.localStorage.setItem("next-day", this.tomorrowDayType());
         window.localStorage.setItem("next-day-rec", now.getDate());
       }
@@ -357,7 +357,7 @@ if (!("ontouchstart" in document.documentElement) && screen.width > 640) {
       return false;
     });
     
-    // domain notification
+    /*// domain notification
     if (!window.localStorage.getItem("domain")) {
       var banner = dom.id("banner");
       banner.classList.remove("fade");
@@ -365,7 +365,7 @@ if (!("ontouchstart" in document.documentElement) && screen.width > 640) {
         window.localStorage.setItem("domain", 1);
         banner.classList.add("fade");
       });
-    }
+    }*/
   });
   
   var Settings = {

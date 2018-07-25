@@ -6,9 +6,14 @@ if (!Date.now) {
   };
 }
 
-if (!("ontouchstart" in document.documentElement) && screen.width > 640) {
+if (screen.width > 640) {
   document.documentElement.classList.add("hoverable");
 }
+
+addEventListener("ontouchstart", function detectTouch() {
+  document.documentElement.classList.remove("hoverable");
+  removeEventListener("ontouchstart", detectTouch);
+});
 
 (function(document, window) {
   var ready = 2;

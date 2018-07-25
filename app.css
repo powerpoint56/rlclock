@@ -87,7 +87,7 @@ a {
   background-color: #fcbd5f;
   display: inline-block;
   cursor: default;
-}*/
+}
 
 .fadeable {
   transition: opacity .3s;
@@ -95,7 +95,7 @@ a {
 
 .fade {
   opacity: 0;
-}
+}*/
 
 #dark {
   position: absolute;

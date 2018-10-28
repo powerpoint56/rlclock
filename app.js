@@ -20,8 +20,8 @@ addEventListener("ontouchstart", function detectTouch() {
   var now = new Date();
   var startWeekday = now.getDay();
   var weekday;
-  var currentMinutes = 0;
-  var pageTitle = "RL Schedule";
+  var currentMinutes = 0, oldMinutes;
+  var pageTitle = "rlclock";
   
   function arrayLastElement(arr) {
     return arr[arr.length - 1];
@@ -166,7 +166,6 @@ addEventListener("ontouchstart", function detectTouch() {
         this.periodsChildren[this.currentPeriod].classList.remove("period-highlight");
         this.currentPeriod++;
       }
-      this.minutesLeft = (this.periods[this.currentPeriod].endMinutes - currentMinutes);
       this.periodsChildren[this.currentPeriod].classList.add("period-highlight");
     },
     
@@ -183,6 +182,8 @@ addEventListener("ontouchstart", function detectTouch() {
       }
       
       currentMinutes = this.fullMinutes(now.getHours(), now.getMinutes());
+      if (currentMinutes === oldMinutes) return;
+      oldMinutes = currentMinutes;
       /*
       if (isFirstTime) {
         currentMinutes = this.fullMinutes(now.getHours(), now.getMinutes());
@@ -204,12 +205,16 @@ addEventListener("ontouchstart", function detectTouch() {
         description = this.formatNumberUnit(timeTemp.hours, "hour", " ", "")
           + this.formatNumberUnit(timeTemp.minutes, "minute", " ") + "until homeroom.";
       } else {
-        if (this.minutesLeft === -4 || this.minutesLeft === undefined) {
+        if (this.minutesLeft === undefined) { // THIS IS REALLY UGLY BUT HMM...
           this.updatePeriod();
           title = this.getRelativePeriod(0);
-        } else {
-          this.minutesLeft--;
         }
+        this.minutesLeft = (this.periods[this.currentPeriod].endMinutes - currentMinutes);
+        if (this.minutesLeft === -5) {
+          this.updatePeriod();
+          title = this.getRelativePeriod(0);
+        }
+        
 
         if (this.minutesLeft <= 0) {
           description = "Passing time: " + this.formatNumberUnit(this.minutesLeft + 5, "minute") + " until " + this.getRelativePeriod(1);

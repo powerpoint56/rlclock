@@ -82,7 +82,9 @@ a {
   top: 0;
 }
 
-/*#banner {
+
+/*BANNER*/
+#banner {
   padding: 5px;
   background-color: #fcbd5f;
   display: inline-block;
@@ -95,7 +97,9 @@ a {
 
 .fade {
   opacity: 0;
-}*/
+}
+/*----*/
+
 
 #dark {
   position: absolute;
@@ -133,7 +137,7 @@ button {
   border: 1px solid #333;
   padding: 5px;
   margin: 0;
-  font-family: 'Open Sans', 'Gill Sans', sans-serif;
+  font-family: inherit;
   font-size: 1em;
   transition: all .2s;
 }
@@ -219,7 +223,7 @@ input[type=checkbox] {
 
 .list-item-time {
   float: right;
-  font-size: 0.7em;
+  font-size: 0.8em;
   color: #595959;
   margin: 0 3px 0 0;
   padding: 0;

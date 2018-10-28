@@ -7,7 +7,9 @@ module.exports = function(grunt) {
                 dest: "app.min.js"
             },
             options: {
-                mangleProperties: true,
+                mangle: {
+                    properties: true 
+                },
                 reserveDOMProperties: true,
                 reserveDOMCache: true,
                 exceptionsFiles: ["mangleExceptions.json"]

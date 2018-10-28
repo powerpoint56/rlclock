@@ -20,7 +20,7 @@ addEventListener("ontouchstart", function detectTouch() {
   var now = new Date();
   var startWeekday = now.getDay();
   var weekday;
-  var currentMinutes;
+  var currentMinutes = 0;
   var pageTitle = "RL Schedule";
   
   function arrayLastElement(arr) {
@@ -83,41 +83,6 @@ addEventListener("ontouchstart", function detectTouch() {
       dom.id("current-title").textContent = title;
       
       dom.id("current-description").textContent = this.displayTomorrowDayType();
-      
-      //this.fetchExamSchedule();
-    },
-    
-    fetchExamSchedule: function() {
-      httpGet(
-        "/exam_schedule.json",
-        function() {
-          Day.examSchedule(JSON.parse(this.responseText));
-        },
-        Day.error
-      );
-    },
-    
-    examSchedule: function(schedule) {
-      var periodsList = document.createDocumentFragment();
-      
-      dom.id("periods-list").classList.add("hide");
-      
-      for (var x in schedule.days) {
-        var list = document.createElement("div");
-        list.className = "list-section";
-        
-        var heading = document.createElement("h3");
-        heading.textContent = x;
-        list.appendChild(heading);
-        
-        var blocks = document.createElement("div");
-        for (var i = 0; i < schedule.days[x].length; ++i) {
-          blocks.appendChild(this.createBlock(schedule.days[x][i][0], schedule.days[x][i][1]));
-        }
-        list.appendChild(blocks);
-        
-        dom.id("schedule").appendChild(list);
-      }
     },
     
     prepareScheduleDOM: function() {
@@ -205,7 +170,7 @@ addEventListener("ontouchstart", function detectTouch() {
       this.periodsChildren[this.currentPeriod].classList.add("period-highlight");
     },
     
-    update: function(isFirstTime) {
+    update: function() {
       var timeTemp;
       var title, description;
       var done;
@@ -217,11 +182,13 @@ addEventListener("ontouchstart", function detectTouch() {
         window.location.reload();
       }
       
+      currentMinutes = this.fullMinutes(now.getHours(), now.getMinutes());
+      /*
       if (isFirstTime) {
         currentMinutes = this.fullMinutes(now.getHours(), now.getMinutes());
       } else {
         currentMinutes++;
-      }
+      }*/
       
       if (currentMinutes >= this.end) {
         document.title = pageTitle;
@@ -230,7 +197,6 @@ addEventListener("ontouchstart", function detectTouch() {
         if (this.currentPeriod) {
           this.periodsChildren[this.currentPeriod].classList.remove("period-highlight");
         }
-        //this.fetchExamSchedule();
         done = true;
       } else if (currentMinutes < this.start) {
         title = "Before school";
@@ -239,7 +205,7 @@ addEventListener("ontouchstart", function detectTouch() {
           + this.formatNumberUnit(timeTemp.minutes, "minute", " ") + "until homeroom.";
       } else {
         if (this.minutesLeft === -4 || this.minutesLeft === undefined) {
-          this.updatePeriod(isFirstTime);
+          this.updatePeriod();
           title = this.getRelativePeriod(0);
         } else {
           this.minutesLeft--;
@@ -290,12 +256,12 @@ addEventListener("ontouchstart", function detectTouch() {
     },
     
     fullMinutes: function(arg1, arg2) { // hours:minutes into minutes since midnight
+      if (typeof arg1 === "number") {
+        return 60 * arg1 + 1 * arg2;
+      }
       if (typeof arg1 === "string") {
         var arr = arg1.split(":");
         return 60 * arr[0] + 1 * arr[1];
-      }
-      if (typeof arg1 === "number") {
-        return 60 * arg1 + 1 * arg2;
       }
     },
     
@@ -362,7 +328,7 @@ addEventListener("ontouchstart", function detectTouch() {
       return false;
     });
     
-    /*// domain notification
+    // UPDATE notification
     if (!window.localStorage.getItem("domain")) {
       var banner = dom.id("banner");
       banner.classList.remove("fade");
@@ -370,7 +336,13 @@ addEventListener("ontouchstart", function detectTouch() {
         window.localStorage.setItem("domain", 1);
         banner.classList.add("fade");
       });
-    }*/
+    }
+  });
+  
+  addEventListener("visibilitychange", function() {
+    if (!document.hidden) {
+      Day.update();
+    }
   });
   
   var Settings = {

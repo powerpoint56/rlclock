@@ -8,7 +8,7 @@ module.exports = function(grunt) {
             },
             options: {
                 mangle: {
-                    properties: false 
+                    properties: true 
                 },
                 reserveDOMProperties: true,
                 reserveDOMCache: true,

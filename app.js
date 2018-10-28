@@ -340,7 +340,7 @@ addEventListener("ontouchstart", function detectTouch() {
   });
   
   addEventListener("visibilitychange", function() {
-    if (!document.hidden) {
+    if (ready === 0 && !document.hidden) {
       Day.update();
     }
   });

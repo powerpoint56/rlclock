@@ -344,11 +344,19 @@ addEventListener("ontouchstart", function detectTouch() {
     }
   });
   
-  addEventListener("visibilitychange", function() {
-    if (ready === 0 && !document.hidden) {
-      Day.update();
-    }
-  });
+  if (typeof document.hidden !== undefined) {
+    addEventListener("visibilitychange", function() {
+      if (ready === 0 && !document.hidden) {
+        Day.update();
+      }
+    });
+  } else {
+    addEventListener("focus", function() {
+      if (ready === 0) {
+        Day.update();
+      }
+    });
+  }
   
   var Settings = {
     data: {

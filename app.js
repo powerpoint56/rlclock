@@ -210,7 +210,7 @@ addEventListener("ontouchstart", function detectTouch() {
           title = this.getRelativePeriod(0);
         }
         this.minutesLeft = (this.periods[this.currentPeriod].endMinutes - currentMinutes);
-        if (this.minutesLeft === -5) {
+        if (this.minutesLeft <= -5) { // IS THIS THE CULPRIT?
           this.updatePeriod();
           title = this.getRelativePeriod(0);
         }

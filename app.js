@@ -334,14 +334,14 @@ addEventListener("ontouchstart", function detectTouch() {
     });
     
     // UPDATE notification
-    if (!window.localStorage.getItem("domain")) {
+    /*if (!window.localStorage.getItem("domain")) {
       var banner = dom.id("banner");
       banner.classList.remove("fade");
       banner.addEventListener("click", function() {
         window.localStorage.setItem("domain", 1);
         banner.classList.add("fade");
       });
-    }
+    }*/
   });
   
   if (typeof document.hidden !== undefined) {

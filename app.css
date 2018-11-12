@@ -83,7 +83,7 @@ a {
 }
 
 
-/*BANNER*/
+/*/*BANNER
 #banner {
   padding: 5px;
   background-color: #fcbd5f;
@@ -97,8 +97,7 @@ a {
 
 .fade {
   opacity: 0;
-}
-/*----*/
+}*/
 
 
 #dark {

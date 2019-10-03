@@ -1,1 +1,1 @@
-Weiss 10/27: Hoping that sync/timing issues are mostly resolved. If you let your phone/laptop/etc sleep and then reopen rlclock, it should automatically catch up or reload. If it doesn't, please email me about it.
+Weiss 10/2/19: Added link to scoreboard in nav menu ("Games"). Thanks Zach Heaton VI for the idea!!

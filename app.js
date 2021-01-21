@@ -307,7 +307,7 @@ addEventListener("ontouchstart", function detectTouch() {
   }
   
   httpGet(
-    window.location.hostname === "rlclock.ml" ? "//casper.roxburylatin.org/todays_schedule.json" : "todays_schedule.json",
+    "//casper.roxburylatin.org/todays_schedule.json",
     function() {
       Day.loadSchedule(JSON.parse(this.responseText));
     },
